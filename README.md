@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Moon Rope
 
-## Getting Started
+A moon-aware reflection journal for noticing patterns, gratitude, and daily life over time.
 
-First, run the development server:
+Moon Rope is an experimental journaling tool designed to help people build a habit of noticing their lives. Entries are recorded daily and later connected with lunar cycles to reveal patterns and moments of meaning across time.
+
+The goal is to create a gentle system that helps users return to presence — a kind of rope they can grab when they feel lost in the day.
+
+---
+
+## Current Prototype
+
+This project is an early prototype.
+
+### Currently implemented
+
+- Daily gratitude + note entry
+- Entries stored in a Supabase database
+- Recent entries displayed in the app
+- Mobile access through browser
+- Next.js frontend with Supabase backend
+
+Future versions will incorporate lunar calculations, historical entry resurfacing, and tools for noticing patterns over time.
+
+---
+
+## Tech Stack
+
+### Frontend
+
+- Next.js
+- React
+- TypeScript
+
+### Backend
+
+- Supabase (Postgres database + API)
+
+### Hosting (planned)
+
+- Vercel
+
+### Astrology calculations (planned)
+
+- Swiss Ephemeris
+
+---
+
+## Running the Project Locally
+
+Clone the repository:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <repo-url>
+cd moon-rope-app
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
