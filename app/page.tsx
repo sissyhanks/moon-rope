@@ -108,7 +108,7 @@ export default function Home() {
         <ul style={{ paddingLeft: "1.25rem" }}>
           {entries.map((entry) => (
             <li key={entry.id} style={{ marginBottom: "1rem" }}>
-              <strong>{entry.entry_date}</strong>
+              <strong>{new Date(entry.entry_date).toLocaleString()}</strong>
               <br />
               Gratitude: {entry.gratitude || "—"}
               <br />
