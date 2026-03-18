@@ -34,7 +34,9 @@ export default function Home() {
   async function loadEntries() {
     const { data, error } = await supabase
       .from("entries")
-      .select("id, created_at, gratitude, note, moon_sign, entry_date")
+      .select(
+        "id, created_at, gratitude, note, moon_sign, moon_degree, entry_date",
+      )
       .order("created_at", { ascending: false })
       .limit(10);
 
