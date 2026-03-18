@@ -5,6 +5,7 @@ import { supabase } from "@/src/lib/supabase";
 
 import { getCurrentMoonPosition, type MoonPosition } from "@/src/lib/moon";
 import { getRecentEntries, saveEntry, type Entry } from "@/src/lib/entries";
+import { getEchoEntriesByMoonSign } from "@/src/lib/entries";
 
 export default function Home() {
   const [gratitude, setGratitude] = useState("");
@@ -12,6 +13,7 @@ export default function Home() {
   const [status, setStatus] = useState("");
   const [entries, setEntries] = useState<Entry[]>([]);
   const [moon, setMoon] = useState<MoonPosition | null>(null);
+  const [echoEntries, setEchoEntries] = useState<Entry[]>([]);
 
   useEffect(() => {
     const loadMoon = async () => {
@@ -39,6 +41,24 @@ export default function Home() {
     loadEntries();
   }, []);
 
+  async function loadEchoEntries(moonSign: string) {
+    try {
+      const data = await getEchoEntriesByMoonSign(moonSign);
+      setEchoEntries(data);
+    } catch (error) {
+      if (error instanceof Error) {
+        setStatus(`Echo load error: ${error.message}`);
+      } else {
+        setStatus("Echo load error: Something went wrong");
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (!moon?.moonSign) return;
+    loadEchoEntries(moon.moonSign);
+  }, [moon]);
+
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
     setStatus("Saving...");
@@ -50,6 +70,9 @@ export default function Home() {
       setGratitude("");
       setNote("");
       await loadEntries();
+      if (moon?.moonSign) {
+        await loadEchoEntries(moon.moonSign);
+      }
     } catch (error) {
       if (error instanceof Error) {
         setStatus(`Save error: ${error.message}`);
@@ -101,6 +124,34 @@ export default function Home() {
       {status && <p>{status}</p>}
 
       <hr style={{ margin: "2rem 0" }} />
+
+      <h2>Echoes from past {moon?.moonSign ?? "..."} moons</h2>
+
+      {echoEntries.length === 0 ? (
+        <p>No echoes yet.</p>
+      ) : (
+        <ul style={{ paddingLeft: "1.25rem" }}>
+          {echoEntries.map((entry) => (
+            <li key={entry.id} style={{ marginBottom: "1rem" }}>
+              <strong>
+                {new Date(entry.created_at).toLocaleString([], {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                  hour: "numeric",
+                  minute: "2-digit",
+                })}
+              </strong>
+              <br />
+              Gratitude: {entry.gratitude || "—"}
+              <br />
+              Note: {entry.note || "—"}
+              <br />
+              Moon Sign: {entry.moon_sign || "—"}
+            </li>
+          ))}
+        </ul>
+      )}
 
       <h2>Recent Entries</h2>
 

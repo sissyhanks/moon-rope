@@ -54,3 +54,20 @@ export async function saveEntry({
     throw new Error(error.message);
   }
 }
+
+export async function getEchoEntriesByMoonSign(moonSign: string) {
+  const { data, error } = await supabase
+    .from("entries")
+    .select(
+      "id, created_at, gratitude, note, moon_sign, moon_degree, entry_date",
+    )
+    .eq("moon_sign", moonSign)
+    .order("entry_date", { ascending: false })
+    .limit(4);
+
+  if (error) {
+    throw error;
+  }
+
+  return (data || []).slice(1, 4);
+}
