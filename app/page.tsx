@@ -43,7 +43,7 @@ export default function Home() {
       return;
     }
 
-    //setEntries(data || []);//
+    setEntries(data || []);
   }
 
   useEffect(() => {
