@@ -4,16 +4,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/src/lib/supabase";
 
 import { getCurrentMoonPosition, type MoonPosition } from "@/src/lib/moon";
-
-type Entry = {
-  id: number;
-  created_at: string;
-  entry_date: string;
-  gratitude: string | null;
-  note: string | null;
-  moon_sign: string | null;
-  moon_degree: string | null;
-};
+import { getRecentEntries, saveEntry, type Entry } from "@/src/lib/entries";
 
 export default function Home() {
   const [gratitude, setGratitude] = useState("");
@@ -32,20 +23,16 @@ export default function Home() {
   }, []);
 
   async function loadEntries() {
-    const { data, error } = await supabase
-      .from("entries")
-      .select(
-        "id, created_at, gratitude, note, moon_sign, moon_degree, entry_date",
-      )
-      .order("created_at", { ascending: false })
-      .limit(10);
-
-    if (error) {
-      setStatus(`Load error: ${error.message}`);
-      return;
+    try {
+      const data = await getRecentEntries(10);
+      setEntries(data);
+    } catch (error) {
+      if (error instanceof Error) {
+        setStatus(`Load error: ${error.message}`);
+      } else {
+        setStatus("Load error: Something went wrong");
+      }
     }
-
-    setEntries(data || []);
   }
 
   useEffect(() => {
@@ -56,26 +43,20 @@ export default function Home() {
     e.preventDefault();
     setStatus("Saving...");
 
-    const { error } = await supabase.from("entries").insert([
-      {
-        created_at: new Date().toISOString(),
-        entry_date: new Date(),
-        gratitude,
-        note,
-        moon_sign: "Moon in",
-        moon_degree: null,
-      },
-    ]);
+    try {
+      await saveEntry({ gratitude, note });
 
-    if (error) {
-      setStatus(`Save error: ${error.message}`);
-      return;
+      setStatus("Saved!");
+      setGratitude("");
+      setNote("");
+      await loadEntries();
+    } catch (error) {
+      if (error instanceof Error) {
+        setStatus(`Save error: ${error.message}`);
+      } else {
+        setStatus("Save error: Something went wrong");
+      }
     }
-
-    setStatus("Saved!");
-    setGratitude("");
-    setNote("");
-    loadEntries();
   }
 
   return (
