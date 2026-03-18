@@ -3,12 +3,16 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/src/lib/supabase";
 
+import { getCurrentMoonPosition, type MoonPosition } from "@/src/lib/moon";
+
 type Entry = {
   id: number;
+  created_at: string;
   entry_date: string;
   gratitude: string | null;
   note: string | null;
   moon_sign: string | null;
+  moon_degree: string | null;
 };
 
 export default function Home() {
@@ -16,12 +20,22 @@ export default function Home() {
   const [note, setNote] = useState("");
   const [status, setStatus] = useState("");
   const [entries, setEntries] = useState<Entry[]>([]);
+  const [moon, setMoon] = useState<MoonPosition | null>(null);
+
+  useEffect(() => {
+    const loadMoon = async () => {
+      const moonData = await getCurrentMoonPosition();
+      setMoon(moonData);
+    };
+
+    loadMoon();
+  }, []);
 
   async function loadEntries() {
     const { data, error } = await supabase
       .from("entries")
-      .select("id, entry_date, gratitude, note, moon_sign")
-      .order("entry_date", { ascending: false })
+      .select("id, created_at, gratitude, note, moon_sign, entry_date")
+      .order("created_at", { ascending: false })
       .limit(10);
 
     if (error) {
@@ -29,7 +43,7 @@ export default function Home() {
       return;
     }
 
-    setEntries(data || []);
+    //setEntries(data || []);//
   }
 
   useEffect(() => {
@@ -42,10 +56,11 @@ export default function Home() {
 
     const { error } = await supabase.from("entries").insert([
       {
-        entry_date: new Date().toISOString().split("T")[0],
+        created_at: new Date().toISOString(),
+        entry_date: new Date(),
         gratitude,
         note,
-        moon_sign: "TBD",
+        moon_sign: "Moon in",
         moon_degree: null,
       },
     ]);
@@ -64,6 +79,10 @@ export default function Home() {
   return (
     <main style={{ padding: "2rem", maxWidth: "600px" }}>
       <h1>Moon Rope Prototype</h1>
+      <section>
+        <h2>Moon in {moon?.moonSign ?? "..."}</h2>
+        <p>{moon ? `${moon.moonDegree.toFixed(2)}°` : "..."}</p>
+      </section>
       <p>Save a simple daily entry.</p>
 
       <form onSubmit={handleSave} style={{ display: "grid", gap: "1rem" }}>
@@ -108,7 +127,15 @@ export default function Home() {
         <ul style={{ paddingLeft: "1.25rem" }}>
           {entries.map((entry) => (
             <li key={entry.id} style={{ marginBottom: "1rem" }}>
-              <strong>{new Date(entry.entry_date).toLocaleString()}</strong>
+              <strong>
+                {new Date(entry.created_at).toLocaleString([], {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                  hour: "numeric",
+                  minute: "2-digit",
+                })}
+              </strong>
               <br />
               Gratitude: {entry.gratitude || "—"}
               <br />
