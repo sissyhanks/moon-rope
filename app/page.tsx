@@ -7,13 +7,30 @@ import { getCurrentMoonPosition, type MoonPosition } from "@/src/lib/moon";
 import { getRecentEntries, saveEntry, type Entry } from "@/src/lib/entries";
 import { getEchoEntriesByMoonSign } from "@/src/lib/entries";
 
+const {
+  data: { user },
+} = await supabase.auth.getUser();
+
 export default function Home() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [gratitude, setGratitude] = useState("");
   const [note, setNote] = useState("");
   const [status, setStatus] = useState("");
   const [entries, setEntries] = useState<Entry[]>([]);
   const [moon, setMoon] = useState<MoonPosition | null>(null);
   const [echoEntries, setEchoEntries] = useState<Entry[]>([]);
+  const [user, setUser] = useState<any | null>(null);
+
+  useEffect(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   useEffect(() => {
     const loadMoon = async () => {
@@ -23,6 +40,49 @@ export default function Home() {
 
     loadMoon();
   }, []);
+
+  useEffect(() => {
+    async function loadUser() {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      setUser(user);
+    }
+
+    loadUser();
+  }, []);
+
+  async function handleLogin() {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      setStatus(`Login error: ${error.message}`);
+    } else {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      setUser(user);
+      setStatus("Logged in!");
+    }
+  }
+
+  async function handleSignUp() {
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+
+    if (error) {
+      console.error(error.message);
+    } else {
+      console.log("Signed up!");
+    }
+  }
 
   async function loadEntries() {
     try {
@@ -79,6 +139,69 @@ export default function Home() {
       } else {
         setStatus("Save error: Something went wrong");
       }
+    }
+  }
+
+  async function handleSignup() {
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+
+    if (error) {
+      setStatus(`Signup error: ${error.message}`);
+    } else {
+      setStatus(
+        "Signup successful! Check your email if confirmation is enabled.",
+      );
+    }
+  }
+
+  if (!user) {
+    if (!user) {
+      return (
+        <main style={{ padding: "2rem", maxWidth: "500px" }}>
+          <h1>Moon Rope</h1>
+          <section>
+            <h2>Moon in {moon?.moonSign ?? "..."}</h2>
+            <p>{moon ? `${moon.moonDegree.toFixed(2)}°` : "..."}</p>
+          </section>
+          <p>Please log in to continue.</p>
+
+          <div style={{ display: "grid", gap: "1rem", marginTop: "1rem" }}>
+            <div>
+              <label htmlFor="email">Email</label>
+              <br />
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                style={{ width: "100%", padding: "0.5rem" }}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="password">Password</label>
+              <br />
+              <input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                style={{ width: "100%", padding: "0.5rem" }}
+              />
+            </div>
+
+            <div style={{ display: "flex", gap: "0.75rem" }}>
+              <button onClick={handleLogin}>Log In</button>
+              <button onClick={handleSignup}>Sign Up</button>
+            </div>
+
+            {status && <p>{status}</p>}
+          </div>
+        </main>
+      );
     }
   }
 

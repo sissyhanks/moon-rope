@@ -17,11 +17,20 @@ type SaveEntryInput = {
 };
 
 export async function getRecentEntries(limit = 10): Promise<Entry[]> {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error("User not logged in");
+  }
+
   const { data, error } = await supabase
     .from("entries")
     .select(
       "id, created_at, gratitude, note, moon_sign, moon_degree, entry_date",
     )
+    .eq("user_id", user.id)
     .order("created_at", { ascending: false })
     .limit(limit);
 
@@ -39,7 +48,15 @@ export async function saveEntry({
   const moon = getCurrentMoonPosition();
   const now = new Date().toISOString();
 
-  const { error } = await supabase.from("entries").insert([
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error("User not logged in");
+  }
+
+  const { data, error } = await supabase.from("entries").insert([
     {
       created_at: now,
       entry_date: now,
@@ -47,6 +64,7 @@ export async function saveEntry({
       note,
       moon_sign: moon.moonSign,
       moon_degree: moon.moonDegree,
+      user_id: user.id,
     },
   ]);
 
@@ -56,12 +74,20 @@ export async function saveEntry({
 }
 
 export async function getEchoEntriesByMoonSign(moonSign: string) {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error("User not logged in");
+  }
   const { data, error } = await supabase
     .from("entries")
     .select(
       "id, created_at, gratitude, note, moon_sign, moon_degree, entry_date",
     )
     .eq("moon_sign", moonSign)
+    .eq("user_id", user.id)
     .order("entry_date", { ascending: false })
     .limit(4);
 
