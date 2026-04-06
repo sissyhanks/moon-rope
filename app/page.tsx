@@ -7,7 +7,7 @@ import { getCurrentMoonPosition, type MoonPosition } from "@/lib/moon";
 import { getRecentEntries, saveEntry, type Entry } from "@/lib/entries";
 import { getEchoEntriesByMoonSign } from "@/lib/entries";
 
-import { MoonClock } from "@/components";
+import { MoonClock, EntryForm } from "@/components";
 
 const {
   data: { user },
@@ -281,50 +281,14 @@ export default function Home() {
             </p>
           </div>
 
-          <form onSubmit={handleSave} className="space-y-4">
-            <div>
-              <label
-                htmlFor="gratitude"
-                className="mb-1 block text-sm font-medium text-stone-700"
-              >
-                Gratitude
-              </label>
-              <input
-                id="gratitude"
-                type="text"
-                value={gratitude}
-                onChange={(e) => setGratitude(e.target.value)}
-                className="w-full rounded-xl border border-stone-300 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-stone-500 focus:ring-2 focus:ring-stone-300"
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="note"
-                className="mb-1 block text-sm font-medium text-stone-700"
-              >
-                Note
-              </label>
-              <textarea
-                id="note"
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-                rows={5}
-                className="w-full rounded-xl border border-stone-300 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-stone-500 focus:ring-2 focus:ring-stone-300"
-              />
-            </div>
-
-            <div className="flex items-center justify-between gap-4">
-              <button
-                type="submit"
-                className="rounded-xl bg-stone-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-stone-700"
-              >
-                Save Entry
-              </button>
-
-              {status && <p className="text-sm text-stone-600">{status}</p>}
-            </div>
-          </form>
+          <EntryForm
+            gratitude={gratitude}
+            note={note}
+            setGratitude={setGratitude}
+            setNote={setNote}
+            handleSave={handleSave}
+            status={status}
+          />
         </section>
 
         <section className="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm">
