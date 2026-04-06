@@ -4,10 +4,14 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
 import { getCurrentMoonPosition, type MoonPosition } from "@/lib/moon";
-import { getRecentEntries, saveEntry, type Entry } from "@/lib/entries";
-import { getEchoEntriesByMoonSign } from "@/lib/entries";
+import {
+  getRecentEntries,
+  saveEntry,
+  getEchoEntriesByMoonSign,
+} from "@/lib/entries";
+import type { Entry } from "@/types";
 
-import { MoonClock, EntryForm } from "@/components";
+import { MoonClock, EntryForm, RecentEntries } from "@/components";
 
 const {
   data: { user },
@@ -335,58 +339,7 @@ export default function Home() {
           )}
         </section>
 
-        <section className="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm">
-          <div className="mb-4">
-            <h2 className="text-xl font-semibold text-stone-900">
-              Recent Entries
-            </h2>
-            <p className="mt-1 text-sm text-stone-600">
-              Your most recent saved moments with their moon sign context.
-            </p>
-          </div>
-
-          {entries.length === 0 ? (
-            <p className="text-sm text-stone-500">No entries yet.</p>
-          ) : (
-            <ul className="space-y-3">
-              {entries.map((entry) => (
-                <li
-                  key={entry.id}
-                  className="rounded-2xl bg-stone-50 px-4 py-3"
-                >
-                  <p className="text-sm font-medium text-stone-900">
-                    {new Date(entry.created_at).toLocaleString([], {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                      hour: "numeric",
-                      minute: "2-digit",
-                    })}
-                  </p>
-                  <p className="mt-2 text-sm text-stone-700">
-                    <span className="font-medium text-stone-900">
-                      Gratitude:
-                    </span>{" "}
-                    {entry.gratitude || "—"}
-                  </p>
-                  <p className="mt-1 text-sm text-stone-700">
-                    <span className="font-medium text-stone-900">Note:</span>{" "}
-                    {entry.note || "—"}
-                  </p>
-                  <p className="mt-1 text-sm text-stone-700">
-                    <span className="font-medium text-stone-900">
-                      Moon Sign:
-                    </span>{" "}
-                    {entry.moon_sign || "—"}
-                    {entry.moon_degree != null
-                      ? `${Number(entry.moon_degree).toFixed(2)}°`
-                      : ""}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
+        <RecentEntries entries={entries} />
       </div>
     </main>
   );

@@ -1,15 +1,7 @@
 import { supabase } from "@/lib/supabase";
 import { getCurrentMoonPosition } from "@/lib/moon";
 
-export type Entry = {
-  id: number;
-  created_at: string;
-  entry_date: string;
-  gratitude: string | null;
-  note: string | null;
-  moon_sign: string | null;
-  moon_degree: number | string | null;
-};
+import type { Entry } from "@/types";
 
 type SaveEntryInput = {
   gratitude: string;
