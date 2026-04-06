@@ -1,5 +1,5 @@
-import { supabase } from "src/lib/supabase";
-import { getCurrentMoonPosition } from "@/src/lib/moon";
+import { supabase } from "@/lib/supabase";
+import { getCurrentMoonPosition } from "@/lib/moon";
 
 export type Entry = {
   id: number;

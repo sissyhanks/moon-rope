@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { supabase } from "@/src/lib/supabase";
+import { supabase } from "@/lib/supabase";
 
-import { getCurrentMoonPosition, type MoonPosition } from "@/src/lib/moon";
-import { getRecentEntries, saveEntry, type Entry } from "@/src/lib/entries";
-import { getEchoEntriesByMoonSign } from "@/src/lib/entries";
+import { getCurrentMoonPosition, type MoonPosition } from "@/lib/moon";
+import { getRecentEntries, saveEntry, type Entry } from "@/lib/entries";
+import { getEchoEntriesByMoonSign } from "@/lib/entries";
+
+import MoonClock from "@/components/MoonClock";
 
 const {
   data: { user },
@@ -268,24 +270,7 @@ export default function Home() {
           </button>
         </header>
 
-        <section className="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm">
-          <p className="text-xs font-medium uppercase tracking-[0.18em] text-stone-500">
-            Current Moon
-          </p>
-          <div className="mt-3 flex items-end justify-between gap-4">
-            <div>
-              <h2 className="text-2xl font-semibold text-stone-900">
-                Moon in {moon?.moonSign ?? "..."}
-              </h2>
-              <p className="mt-1 text-sm text-stone-600">
-                The current sky context attached to new entries.
-              </p>
-            </div>
-            <p className="text-3xl font-medium tabular-nums text-stone-900">
-              {moon ? `${moon.moonDegree.toFixed(2)}°` : "..."}
-            </p>
-          </div>
-        </section>
+        <MoonClock moon={moon} />
 
         <section className="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm">
           <div className="mb-4">
@@ -442,144 +427,3 @@ export default function Home() {
     </main>
   );
 }
-//   if (!user) {
-//     if (!user) {
-//       return (
-//         <main style={{ padding: "2rem", maxWidth: "500px" }}>
-//           <h1>Moon Rope</h1>
-//           <section>
-//             <h2>Moon in {moon?.moonSign ?? "..."}</h2>
-//             <p>{moon ? `${moon.moonDegree.toFixed(2)}°` : "..."}</p>
-//           </section>
-//           <p>Please log in to continue.</p>
-
-//           <div style={{ display: "grid", gap: "1rem", marginTop: "1rem" }}>
-//             <div>
-//               <label htmlFor="email">Email</label>
-//               <br />
-//               <input
-//                 id="email"
-//                 type="email"
-//                 value={email}
-//                 onChange={(e) => setEmail(e.target.value)}
-//                 style={{ width: "100%", padding: "0.5rem" }}
-//               />
-//             </div>
-
-//             <div>
-//               <label htmlFor="password">Password</label>
-//               <br />
-//               <input
-//                 id="password"
-//                 type="password"
-//                 value={password}
-//                 onChange={(e) => setPassword(e.target.value)}
-//                 style={{ width: "100%", padding: "0.5rem" }}
-//               />
-//             </div>
-
-//             <div style={{ display: "flex", gap: "0.75rem" }}>
-//               <button onClick={handleLogin}>Log In</button>
-//               <button onClick={handleSignup}>Sign Up</button>
-//             </div>
-
-//             {status && <p>{status}</p>}
-//           </div>
-//         </main>
-//       );
-//     }
-//   }
-
-//   return (
-//     <main style={{ padding: "2rem", maxWidth: "600px" }}>
-//       <h1>Moon Rope Prototype</h1>
-//       <section>
-//         <h2>Moon in {moon?.moonSign ?? "..."}</h2>
-//         <p>{moon ? `${moon.moonDegree.toFixed(2)}°` : "..."}</p>
-//       </section>
-//       <p>Save a simple daily entry.</p>
-//       <form onSubmit={handleSave} style={{ display: "grid", gap: "1rem" }}>
-//         <div>
-//           <label htmlFor="gratitude">Gratitude</label>
-//           <br />
-//           <input
-//             id="gratitude"
-//             type="text"
-//             value={gratitude}
-//             onChange={(e) => setGratitude(e.target.value)}
-//             style={{ width: "100%", padding: "0.5rem" }}
-//           />
-//         </div>
-
-//         <div>
-//           <label htmlFor="note">Note</label>
-//           <br />
-//           <textarea
-//             id="note"
-//             value={note}
-//             onChange={(e) => setNote(e.target.value)}
-//             rows={5}
-//             style={{ width: "100%", padding: "0.5rem" }}
-//           />
-//         </div>
-
-//         <button type="submit" style={{ padding: "0.75rem 1rem" }}>
-//           Save Entry
-//         </button>
-//       </form>
-//       {status && <p>{status}</p>}
-//       <hr style={{ margin: "2rem 0" }} />
-//       <h2>Echoes from past {moon?.moonSign ?? "..."} moons</h2>
-//       {echoEntries.length === 0 ? (
-//         <p>No echoes yet.</p>
-//       ) : (
-//         <ul style={{ paddingLeft: "1.25rem" }}>
-//           {echoEntries.map((entry) => (
-//             <li key={entry.id} style={{ marginBottom: "1rem" }}>
-//               <strong>
-//                 {new Date(entry.created_at).toLocaleString([], {
-//                   year: "numeric",
-//                   month: "short",
-//                   day: "numeric",
-//                   hour: "numeric",
-//                   minute: "2-digit",
-//                 })}
-//               </strong>
-//               <br />
-//               Gratitude: {entry.gratitude || "—"}
-//               <br />
-//               Note: {entry.note || "—"}
-//               <br />
-//               Moon Sign: {entry.moon_sign || "—"}
-//             </li>
-//           ))}
-//         </ul>
-//       )}
-//       <h2>Recent Entries</h2>
-//       {entries.length === 0 ? (
-//         <p>No entries yet.</p>
-//       ) : (
-//         <ul style={{ paddingLeft: "1.25rem" }}>
-//           {entries.map((entry) => (
-//             <li key={entry.id} style={{ marginBottom: "1rem" }}>
-//               <strong>
-//                 {new Date(entry.created_at).toLocaleString([], {
-//                   year: "numeric",
-//                   month: "short",
-//                   day: "numeric",
-//                   hour: "numeric",
-//                   minute: "2-digit",
-//                 })}
-//               </strong>
-//               <br />
-//               Gratitude: {entry.gratitude || "—"}
-//               <br />
-//               Note: {entry.note || "—"}
-//               <br />
-//               Moon Sign: {entry.moon_sign || "—"}
-//             </li>
-//           ))}
-//         </ul>
-//       )}
-//     </main>
-//   );
