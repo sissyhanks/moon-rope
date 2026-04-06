@@ -7,7 +7,7 @@ import { getCurrentMoonPosition, type MoonPosition } from "@/lib/moon";
 import { getRecentEntries, saveEntry, type Entry } from "@/lib/entries";
 import { getEchoEntriesByMoonSign } from "@/lib/entries";
 
-import MoonClock from "@/components/MoonClock";
+import { MoonClock } from "@/components";
 
 const {
   data: { user },
