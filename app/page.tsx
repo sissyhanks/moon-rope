@@ -430,7 +430,7 @@ export default function Home() {
                     </span>{" "}
                     {entry.moon_sign || "—"}
                     {entry.moon_degree != null
-                      ? ` ${entry.moon_degree.toFixed(2)}°`
+                      ? `${Number(entry.moon_degree).toFixed(2)}°`
                       : ""}
                   </p>
                 </li>

@@ -8,7 +8,7 @@ export type Entry = {
   gratitude: string | null;
   note: string | null;
   moon_sign: string | null;
-  moon_degree: string | null;
+  moon_degree: number | string | null;
 };
 
 type SaveEntryInput = {

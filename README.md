@@ -2,25 +2,55 @@
 
 A moon-aware reflection journal for noticing patterns, gratitude, and daily life over time.
 
-Moon Rope is an experimental journaling tool designed to help people build a habit of noticing their lives. Entries are recorded daily and later connected with lunar cycles to reveal patterns and moments of meaning across time.
+Moon Rope is a journaling tool designed to help people build a habit of noticing their lives. Entries are recorded daily and connected with lunar cycles to reveal patterns, emotional rhythms, and moments of meaning across time.
 
 The goal is to create a gentle system that helps users return to presence — a kind of rope they can grab when they feel lost in the day.
 
 ---
 
-## Current Prototype
+## Current State (Phase 2)
 
-This project is an early prototype.
+Moon Rope is now a working application with lunar context and personal data tracking.
 
-### Currently implemented
+### Core Features
 
-- Daily gratitude + note entry
-- Entries stored in a Supabase database
-- Recent entries displayed in the app
-- Mobile access through browser
-- Next.js frontend with Supabase backend
+- 🌙 **Current Moon Tracking**
+  - Displays the current moon sign and degree
 
-Future versions will incorporate lunar calculations, historical entry resurfacing, and tools for noticing patterns over time.
+- ✍️ **Daily Entry Logging**
+  - Users can record gratitude and notes
+  - Each entry is automatically tagged with:
+    - moon sign
+    - moon degree
+    - timestamp
+
+- 🔐 **User Authentication**
+  - Email/password sign up and login via Supabase Auth
+  - Entries are scoped to individual users
+
+- 🗂 **Recent Entries**
+  - Displays the most recent journal entries for the logged-in user
+
+- 🔁 **Echo Feature (Lunar Recall)**
+  - Surfaces entries from the _previous time the moon was in the same sign_
+  - Creates a sense of temporal continuity and pattern recognition
+
+- 🎨 **Styled Interface**
+  - Tailwind-based UI for a clean, readable journaling experience
+
+---
+
+## Concept
+
+Moon Rope is built around a simple loop:
+
+Rather than focusing on prediction, the app uses the moon as a **contextual anchor for memory**.
+
+Over time, users begin to notice:
+
+- recurring emotional states
+- patterns in behavior or energy
+- connections between moments separated by time
 
 ---
 
@@ -28,21 +58,26 @@ Future versions will incorporate lunar calculations, historical entry resurfacin
 
 ### Frontend
 
-- Next.js
+- Next.js (App Router)
 - React
 - TypeScript
+- Tailwind CSS
 
 ### Backend
 
-- Supabase (Postgres database + API)
+- Supabase
+  - Postgres database
+  - Authentication (email/password)
+  - Row Level Security (RLS)
 
-### Hosting (planned)
+### Hosting
 
 - Vercel
 
-### Astrology calculations (planned)
+### Moon Calculations
 
-- Swiss Ephemeris
+- astronomia (current implementation)
+- Swiss Ephemeris (planned for higher precision)
 
 ---
 
