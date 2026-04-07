@@ -34,3 +34,11 @@ export async function signUpWithEmail(email: string, password: string) {
     throw new Error(error.message);
   }
 }
+
+export async function signOutUser() {
+  const { error } = await supabase.auth.signOut();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+}
