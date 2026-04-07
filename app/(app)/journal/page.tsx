@@ -27,25 +27,12 @@ const {
 } = await supabase.auth.getUser();
 
 export default function Home() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [gratitude, setGratitude] = useState("");
   const [note, setNote] = useState("");
   const [status, setStatus] = useState("");
   const [entries, setEntries] = useState<Entry[]>([]);
   const [moon, setMoon] = useState<MoonPosition | null>(null);
   const [echoEntries, setEchoEntries] = useState<Entry[]>([]);
-  const [user, setUser] = useState<any | null>(null);
-
-  useEffect(() => {
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
 
   useEffect(() => {
     const loadMoon = async () => {
@@ -55,61 +42,6 @@ export default function Home() {
 
     loadMoon();
   }, []);
-
-  useEffect(() => {
-    async function loadUser() {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      setUser(user);
-    }
-
-    loadUser();
-  }, []);
-
-  async function handleLogin() {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (error) {
-      setStatus(`Login error: ${error.message}`);
-    } else {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      setUser(user);
-      setStatus("Logged in!");
-    }
-  }
-
-  async function handleSignUp() {
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
-
-    if (error) {
-      console.error(error.message);
-    } else {
-      console.log("Signed up!");
-    }
-  }
-
-  async function handleLogout() {
-    const { error } = await supabase.auth.signOut();
-
-    if (error) {
-      setStatus(`Logout error: ${error.message}`);
-    } else {
-      setStatus("Logged out.");
-      setEntries([]);
-      setEchoEntries([]);
-    }
-  }
 
   async function loadEntries() {
     try {
@@ -169,95 +101,6 @@ export default function Home() {
     }
   }
 
-  async function handleSignup() {
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
-
-    if (error) {
-      setStatus(`Signup error: ${error.message}`);
-    } else {
-      setStatus(
-        "Signup successful! Check your email if confirmation is enabled.",
-      );
-    }
-  }
-
-  if (!user) {
-    return (
-      <main className="min-h-screen px-6 py-10">
-        <div className="mx-auto max-w-md">
-          <div className="rounded-3xl border border-stone-200 bg-white p-8 shadow-sm">
-            <div className="mb-6 space-y-2 text-center">
-              <h1 className="text-3xl font-semibold tracking-tight text-stone-900">
-                Moon Rope
-              </h1>
-              <p className="text-sm text-stone-600">
-                Log in to enter and revisit your moon-marked memories.
-              </p>
-            </div>
-
-            <div className="space-y-4">
-              <div>
-                <label
-                  htmlFor="email"
-                  className="mb-1 block text-sm font-medium text-stone-700"
-                >
-                  Email
-                </label>
-                <input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full rounded-xl border border-stone-300 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-stone-500 focus:ring-2 focus:ring-stone-300"
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="password"
-                  className="mb-1 block text-sm font-medium text-stone-700"
-                >
-                  Password
-                </label>
-                <input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full rounded-xl border border-stone-300 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-stone-500 focus:ring-2 focus:ring-stone-300"
-                />
-              </div>
-
-              <div className="flex gap-3 pt-2">
-                <button
-                  onClick={handleLogin}
-                  className="flex-1 rounded-xl bg-stone-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-stone-700"
-                >
-                  Log In
-                </button>
-                <button
-                  onClick={handleSignup}
-                  className="flex-1 rounded-xl border border-stone-300 bg-white px-4 py-2.5 text-sm font-medium text-stone-800 transition hover:bg-stone-50"
-                >
-                  Sign Up
-                </button>
-              </div>
-
-              {status && (
-                <p className="rounded-xl bg-stone-100 px-3 py-2 text-sm text-stone-700">
-                  {status}
-                </p>
-              )}
-            </div>
-          </div>
-        </div>
-      </main>
-    );
-  }
-
   return (
     <main className="min-h-screen px-6 py-8">
       <div className="mx-auto max-w-3xl space-y-6">
@@ -275,12 +118,12 @@ export default function Home() {
             </p>
           </div>
 
-          <button
+          {/* <button
             onClick={handleLogout}
             className="rounded-xl border border-stone-300 bg-white px-4 py-2 text-sm font-medium text-stone-700 transition hover:bg-stone-50"
           >
             Log Out
-          </button>
+          </button> */}
         </header>
 
         <MoonClock moon={moon} />
