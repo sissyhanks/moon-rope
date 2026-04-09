@@ -1,3 +1,5 @@
+import { ui } from "@/styles/ui";
+
 type AuthFormProps = {
   title: string;
   subtitle: string;
@@ -22,42 +24,37 @@ export default function AuthForm({
   status,
 }: AuthFormProps) {
   return (
-    <main className="mx-auto max-w-md p-6">
-      <div className="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm">
-        <h1 className="text-2xl font-semibold text-stone-900">{title}</h1>
-        <p className="mt-2 text-sm text-stone-600">{subtitle}</p>
+    <main className={ui.layout.page}>
+      <div className={ui.layout.card}>
+        <h1 className={ui.text.pageTitle}>{title}</h1>
+        <p className={ui.text.subtitle}>{subtitle}</p>
 
-        <form onSubmit={handleSubmit} className="mt-6 grid gap-4">
-          <div>
-            <label className="text-sm font-medium text-stone-700">Email</label>
+        <form onSubmit={handleSubmit} className={ui.layout.formWithTopSpacing}>
+          <div className={ui.layout.field}>
+            <label className={ui.text.label}>Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 w-full rounded-xl border border-stone-200 px-3 py-2 text-sm"
+              className={ui.input.text}
             />
           </div>
 
-          <div>
-            <label className="text-sm font-medium text-stone-700">
-              Password
-            </label>
+          <div className={ui.layout.field}>
+            <label className={ui.text.label}>Password</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 w-full rounded-xl border border-stone-200 px-3 py-2 text-sm"
+              className={ui.input.text}
             />
           </div>
 
-          <button
-            type="submit"
-            className="rounded-xl bg-stone-900 px-4 py-2 text-sm font-medium text-white"
-          >
+          <button type="submit" className={ui.button.primary}>
             {submitLabel}
           </button>
 
-          {status && <p className="text-sm text-stone-500">{status}</p>}
+          {status && <p className={ui.text.status}>{status}</p>}
         </form>
       </div>
     </main>
