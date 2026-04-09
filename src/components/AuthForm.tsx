@@ -24,39 +24,37 @@ export default function AuthForm({
   status,
 }: AuthFormProps) {
   return (
-    <main className={ui.layout.page}>
-      <div className={ui.layout.card}>
-        <h1 className={ui.text.pageTitle}>{title}</h1>
-        <p className={ui.text.subtitle}>{subtitle}</p>
+    <div className={ui.layout.card}>
+      <h1 className={ui.text.pageTitle}>{title}</h1>
+      <p className={ui.text.subtitle}>{subtitle}</p>
 
-        <form onSubmit={handleSubmit} className={ui.layout.formWithTopSpacing}>
-          <div className={ui.layout.field}>
-            <label className={ui.text.label}>Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className={ui.input.text}
-            />
-          </div>
+      <form onSubmit={handleSubmit} className={ui.layout.formWithTopSpacing}>
+        <div className={ui.layout.field}>
+          <label className={ui.text.label}>Email</label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className={ui.input.text}
+          />
+        </div>
 
-          <div className={ui.layout.field}>
-            <label className={ui.text.label}>Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className={ui.input.text}
-            />
-          </div>
+        <div className={ui.layout.field}>
+          <label className={ui.text.label}>Password</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className={ui.input.text}
+          />
+        </div>
 
-          <button type="submit" className={ui.button.primary}>
-            {submitLabel}
-          </button>
+        <button type="submit" className={ui.button.primary}>
+          {submitLabel}
+        </button>
 
-          {status && <p className={ui.text.status}>{status}</p>}
-        </form>
-      </div>
-    </main>
+        {status && <p className={ui.text.status}>{status}</p>}
+      </form>
+    </div>
   );
 }

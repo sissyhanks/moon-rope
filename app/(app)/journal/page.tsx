@@ -3,15 +3,16 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getCurrentUser, signOutUser } from "@/lib/auth";
-import { supabase } from "@/lib/supabase";
 import { getCurrentMoonPosition, type MoonPosition } from "@/lib/moon";
 import {
   getRecentEntries,
   saveEntry,
   getEchoEntriesByMoonSign,
 } from "@/lib/entries";
+import { formatShortDate } from "@/lib/date";
 import type { Entry } from "@/types";
-import { MoonClock, EntryForm, RecentEntries, EchoEntries } from "@/components";
+import AppHeader from "@/components/AppHeader";
+import { EntryForm, RecentEntries, EchoEntries } from "@/components";
 
 export default function JournalPage() {
   const router = useRouter();
@@ -129,10 +130,9 @@ export default function JournalPage() {
     }
   }
 
-  // ✅ EARLY RETURNS ONLY AFTER ALL HOOKS
   if (authLoading) {
     return (
-      <main className="p-6">
+      <main className="mx-auto max-w-md px-4 py-6">
         <p className="text-sm text-stone-500">Loading...</p>
       </main>
     );
@@ -143,19 +143,21 @@ export default function JournalPage() {
   }
 
   return (
-    <main className="mx-auto max-w-3xl p-6">
-      <div className="flex items-center justify-between gap-4">
-        <h1 className="text-3xl font-semibold text-stone-900">Moon Rope</h1>
-        <button
-          onClick={handleLogout}
-          className="rounded-xl border border-stone-300 px-4 py-2 text-sm font-medium text-stone-900"
-        >
-          Log Out
-        </button>
-      </div>
+    <main className="mx-auto max-w-md px-4 py-6">
+      <AppHeader
+        moonSign={moon?.moonSign}
+        dateText={formatShortDate()}
+        rightContent={
+          <button
+            onClick={handleLogout}
+            className="text-sm font-medium leading-none text-stone-200 underline-offset-4 hover:underline"
+          >
+            Log Out
+          </button>
+        }
+      />
 
       <div className="mt-6 space-y-6">
-        <MoonClock moon={moon} />
         <EntryForm
           gratitude={gratitude}
           note={note}

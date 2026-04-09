@@ -1,3 +1,5 @@
+import { ui } from "@/styles/ui";
+
 type EntryFormProps = {
   gratitude: string;
   note: string;
@@ -16,35 +18,37 @@ export default function EntryForm({
   status,
 }: EntryFormProps) {
   return (
-    <form onSubmit={handleSave} className="grid gap-4">
-      <div>
-        <label className="text-sm font-medium text-stone-700">Gratitude</label>
-        <input
-          type="text"
-          value={gratitude}
-          onChange={(e) => setGratitude(e.target.value)}
-          className="mt-1 w-full rounded-xl border border-stone-200 px-3 py-2 text-sm"
-        />
-      </div>
+    <div className={ui.layout.card}>
+      <h2 className={ui.text.pageTitle}>New Entry</h2>
+      <p className={ui.text.subtitle}>Record what is here today.</p>
 
-      <div>
-        <label className="text-sm font-medium text-stone-700">Note</label>
-        <textarea
-          value={note}
-          onChange={(e) => setNote(e.target.value)}
-          rows={4}
-          className="mt-1 w-full rounded-xl border border-stone-200 px-3 py-2 text-sm"
-        />
-      </div>
+      <form onSubmit={handleSave} className={ui.layout.formWithTopSpacing}>
+        <div className={ui.layout.field}>
+          <label className={ui.text.label}>Gratitude</label>
+          <input
+            type="text"
+            value={gratitude}
+            onChange={(e) => setGratitude(e.target.value)}
+            className={ui.input.text}
+          />
+        </div>
 
-      <button
-        type="submit"
-        className="rounded-xl bg-stone-900 px-4 py-2 text-sm font-medium text-white"
-      >
-        Save Entry
-      </button>
+        <div className={ui.layout.field}>
+          <label className={ui.text.label}>Note</label>
+          <textarea
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            rows={4}
+            className={ui.input.textarea}
+          />
+        </div>
 
-      {status && <p className="text-sm text-stone-500">{status}</p>}
-    </form>
+        <button type="submit" className={ui.button.primary}>
+          Save Entry
+        </button>
+
+        {status && <p className={ui.text.status}>{status}</p>}
+      </form>
+    </div>
   );
 }

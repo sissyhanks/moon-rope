@@ -1,3 +1,4 @@
+import { ui } from "@/styles/ui";
 import type { Entry } from "@/types";
 
 type EchoEntriesProps = {
@@ -10,23 +11,21 @@ export default function EchoEntries({
   echoEntries,
 }: EchoEntriesProps) {
   return (
-    <section className="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm">
-      <div className="mb-4">
-        <h2 className="text-xl font-semibold text-stone-900">
-          Echoes from the previous {moonSign ?? "..."} moon
-        </h2>
-        <p className="mt-1 text-sm text-stone-600">
-          Entries from the last time the moon was in this sign.
-        </p>
-      </div>
+    <section className={ui.layout.card}>
+      <h2 className={ui.text.pageTitle}>
+        Echoes from the previous {moonSign ?? "..."} moon
+      </h2>
+      <p className={ui.text.subtitle}>
+        Entries from the last time the moon was in this sign.
+      </p>
 
       {echoEntries.length === 0 ? (
-        <p className="text-sm text-stone-500">No echoes yet.</p>
+        <p className="mt-6 text-sm text-stone-300">No echoes yet.</p>
       ) : (
-        <ul className="space-y-3">
+        <ul className="mt-6 space-y-4">
           {echoEntries.map((entry) => (
-            <li key={entry.id} className="rounded-2xl bg-stone-50 px-4 py-3">
-              <p className="text-sm font-medium text-stone-900">
+            <li key={entry.id} className="rounded-2xl px-4 py-4">
+              <p className="text-sm font-medium text-stone-200">
                 {new Date(entry.created_at).toLocaleString([], {
                   year: "numeric",
                   month: "short",
@@ -35,16 +34,19 @@ export default function EchoEntries({
                   minute: "2-digit",
                 })}
               </p>
-              <p className="mt-2 text-sm text-stone-700">
-                <span className="font-medium text-stone-900">Gratitude:</span>{" "}
+
+              <p className="mt-3 text-sm text-stone-300">
+                <span className="font-medium text-stone-200">Gratitude:</span>{" "}
                 {entry.gratitude || "—"}
               </p>
-              <p className="mt-1 text-sm text-stone-700">
-                <span className="font-medium text-stone-900">Note:</span>{" "}
+
+              <p className="mt-1 text-sm text-stone-300">
+                <span className="font-medium text-stone-200">Note:</span>{" "}
                 {entry.note || "—"}
               </p>
-              <p className="mt-1 text-sm text-stone-700">
-                <span className="font-medium text-stone-900">Moon Sign:</span>{" "}
+
+              <p className="mt-1 text-sm text-stone-300">
+                <span className="font-medium text-stone-200">Moon Sign:</span>{" "}
                 {entry.moon_sign || "—"}
                 {entry.moon_degree != null
                   ? ` ${Number(entry.moon_degree).toFixed(2)}°`

@@ -30,6 +30,15 @@ export const ui = {
     primary: "rounded-xl bg-stone-900 px-4 py-2 text-sm font-medium text-white",
   },
 
+  panel: {
+    item: "rounded-2xl px-4 py-4",
+    itemTitle: "text-sm font-medium text-stone-200",
+    itemText: "mt-1 text-sm text-stone-300",
+    itemLabel: "font-medium text-stone-200",
+    list: "mt-6 space-y-4",
+    empty: "mt-6 text-sm text-stone-300",
+  },
+
   header: {
     layout: {
       page: "mx-auto max-w-md px-4 py-6",

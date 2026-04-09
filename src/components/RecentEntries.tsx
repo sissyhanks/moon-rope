@@ -1,3 +1,4 @@
+import { ui } from "@/styles/ui";
 import type { Entry } from "@/types";
 
 type RecentEntriesProps = {
@@ -6,16 +7,17 @@ type RecentEntriesProps = {
 
 export default function RecentEntries({ entries }: RecentEntriesProps) {
   return (
-    <>
-      <h2 className="text-xl font-semibold text-stone-900">Recent Entries</h2>
+    <section className={ui.layout.card}>
+      <h2 className={ui.text.pageTitle}>Recent Entries</h2>
+      <p className={ui.text.subtitle}>Your most recent journal entries.</p>
 
       {entries.length === 0 ? (
-        <p className="text-sm text-stone-500">No entries yet.</p>
+        <p className={ui.panel.empty}>No entries yet.</p>
       ) : (
-        <ul className="space-y-3">
+        <ul className={ui.panel.list}>
           {entries.map((entry) => (
-            <li key={entry.id} className="rounded-2xl bg-stone-50 px-4 py-3">
-              <p className="text-sm font-medium text-stone-900">
+            <li key={entry.id} className={ui.panel.item}>
+              <p className={ui.panel.itemTitle}>
                 {new Date(entry.created_at).toLocaleString([], {
                   year: "numeric",
                   month: "short",
@@ -24,16 +26,19 @@ export default function RecentEntries({ entries }: RecentEntriesProps) {
                   minute: "2-digit",
                 })}
               </p>
-              <p className="mt-2 text-sm text-stone-700">
-                <span className="font-medium text-stone-900">Gratitude:</span>{" "}
+
+              <p className="mt-3 text-sm text-stone-300">
+                <span className={ui.panel.itemLabel}>Gratitude:</span>{" "}
                 {entry.gratitude || "—"}
               </p>
-              <p className="mt-1 text-sm text-stone-700">
-                <span className="font-medium text-stone-900">Note:</span>{" "}
+
+              <p className={ui.panel.itemText}>
+                <span className={ui.panel.itemLabel}>Note:</span>{" "}
                 {entry.note || "—"}
               </p>
-              <p className="mt-1 text-sm text-stone-700">
-                <span className="font-medium text-stone-900">Moon Sign:</span>{" "}
+
+              <p className={ui.panel.itemText}>
+                <span className={ui.panel.itemLabel}>Moon Sign:</span>{" "}
                 {entry.moon_sign || "—"}
                 {entry.moon_degree != null
                   ? ` ${Number(entry.moon_degree).toFixed(2)}°`
@@ -43,6 +48,6 @@ export default function RecentEntries({ entries }: RecentEntriesProps) {
           ))}
         </ul>
       )}
-    </>
+    </section>
   );
 }
