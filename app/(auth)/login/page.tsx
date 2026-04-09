@@ -2,11 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+
 import AppHeader from "@/components/AppHeader";
 import { getCurrentMoonPosition } from "@/lib/moon";
 import { formatShortDate } from "@/lib/date";
 import AuthForm from "@/components/AuthForm";
 import { signInWithEmail } from "@/lib/auth";
+import { supabase } from "@/lib/supabase";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -14,11 +16,29 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState("");
   const [moonSign, setMoonSign] = useState<string | null>(null);
+  const [checkingSession, setCheckingSession] = useState(true);
 
   useEffect(() => {
     const moon = getCurrentMoonPosition();
     setMoonSign(moon.moonSign);
   }, []);
+
+  useEffect(() => {
+    async function checkSession() {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (session) {
+        router.replace("/journal");
+        return;
+      }
+
+      setCheckingSession(false);
+    }
+
+    checkSession();
+  }, [router]);
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
@@ -35,6 +55,10 @@ export default function LoginPage() {
         setStatus("Login error: Something went wrong");
       }
     }
+  }
+
+  if (checkingSession) {
+    return null;
   }
 
   return (
